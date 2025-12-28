@@ -33,14 +33,14 @@ const handlesubmit = () => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card class="overflow-hidden p-0">
       <CardContent class="grid p-0 md:grid-cols-2">
-        <form class="p-6 md:p-8">
+        <form @submit.prevent="handlesubmit" class="p-6 md:p-8">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
                 Welcome back
               </h1>
               <p class="text-muted-foreground text-balance">
-                Login to your Acme Inc account
+                Login to your Open Tunings Inc account
               </p>
             </div>
             <Field>
