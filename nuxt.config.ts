@@ -8,7 +8,21 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["@nuxt/eslint", "@nuxt/image", "@nuxt/test-utils", "shadcn-nuxt"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxt/image",
+    "@nuxt/test-utils",
+    "shadcn-nuxt",
+    "@nuxtjs/supabase",
+  ],
+
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm', 
+      exclude: ['/', '/auth/registration', '/auth/login'],
+    },
+  },
   shadcn: {
     /**
      * Prefix for all the imported component.
