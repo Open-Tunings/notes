@@ -15,13 +15,26 @@ import { Input } from '@/components/ui/input'
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const credentials = reactive({
+  email: "",
+  password: "",
+  // confirmPassword: ""
+
+})
+
+const emit = defineEmits(['submit'])
+
+const handlesubmit = () => {
+  emit('submit', {...credentials})
+}
 </script>
 
 <template>
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card class="overflow-hidden p-0">
       <CardContent class="grid p-0 md:grid-cols-2">
-        <form class="p-6 md:p-8">
+        <form  @submit.prevent="handlesubmit" class="p-6 md:p-8">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">
@@ -37,6 +50,7 @@ const props = defineProps<{
               </FieldLabel>
               <Input
                 id="email"
+                v-model="credentials.email"
                 type="email"
                 placeholder="m@example.com"
                 required
@@ -52,14 +66,14 @@ const props = defineProps<{
                   <FieldLabel for="password">
                     Password
                   </FieldLabel>
-                  <Input id="password" type="password" required />
+                  <Input v-model="credentials.password" id="password" type="password" required />
                 </Field>
-                <Field>
+                <!-- <Field>
                   <FieldLabel for="confirm-password">
                     Confirm Password
                   </FieldLabel>
-                  <Input id="confirm-password" type="password" required />
-                </Field>
+                  <Input v-model="credentials.confirmPassword" id="confirm-password" type="password" required />
+                </Field> -->
               </Field>
               <FieldDescription>
                 Must be at least 8 characters long.
