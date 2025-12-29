@@ -14,13 +14,17 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "shadcn-nuxt",
     "@nuxtjs/supabase",
+    "@nuxtjs/color-mode",
   ],
 
+  colorMode: {
+    classSuffix: "",
+  },
   supabase: {
     redirectOptions: {
-      login: '/login',
-      callback: '/confirm', 
-      exclude: ['/', '/auth/registration', '/auth/login'],
+      login: "/login",
+      callback: "/confirm",
+      exclude: ["/", "/auth/registration", "/auth/login"],
     },
   },
   shadcn: {
