@@ -1,5 +1,6 @@
 
 export const authRepository = (supabase) => ({
+
   async login({ email, password }) {
 
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -10,5 +11,19 @@ export const authRepository = (supabase) => ({
     if (error) throw error
     
     return data
+  },
+
+  async register({ email, password }) {
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password 
+    })
+
+    if (error) throw error
+    
+    return data
   }
+
+
 })
