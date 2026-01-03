@@ -1,6 +1,7 @@
 <script setup>
 import SignupForm from "@/components/signup-04/components/SignupForm.vue";
 import { authRepository } from "~~/repository/auth";
+import { toast } from 'vue-sonner'
 
 definePageMeta({
   layout: "auth",
@@ -14,7 +15,7 @@ const handleRegister = async (credentials) => {
   isLoading.value = true;
   try {
     await auth.register(credentials);
-    alert("registration successful");
+    // alert("registration successful");
     await navigateTo("/");
   } catch (error) {
     alert(error.message || "An error occurred during registration");
@@ -23,8 +24,6 @@ const handleRegister = async (credentials) => {
   }
 };
 </script>
-
-<script setup lang="ts"></script>
 
 <template>
   <div
