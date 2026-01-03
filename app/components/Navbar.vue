@@ -1,0 +1,46 @@
+<template>
+  <div
+    class="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-[fit-content] py-3 border border-white/10 bg-black rounded-2xl"
+  >
+    <div class="flex items-center gap-4 px-6">
+      <NuxtLink
+        class="p-1"
+        v-for="link in navLinks"
+        :key="link.path"
+        :to="link.path"
+      >
+        <TooltipProvider :delay-duration="0">
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button
+                :variant="route.path === link.path ? 'secondary' : 'ghost'"
+                class="w-14 h-14 rounded-xl transition-all duration-300 flex items-center justify-center"
+                :class="
+                  route.path === link.path
+                    ? 'scale-110'
+                    : 'text-gray-400 hover:text-white'
+                "
+              >
+                <Icon :name="link.icon" class="w-9 h-9" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{{ link.name }}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </NuxtLink>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const route = useRoute();
+
+const navLinks = [
+  { name: "Home", path: "/", icon: "i-heroicons-home" },
+  { name: "Search", path: "/studio", icon: "i-heroicons-magnifying-glass" },
+  { name: "Profile", path: "/Rank", icon: "i-heroicons-trophy" },
+  { name: "Settings", path: "/settings", icon: "i-heroicons-cog-6-tooth" },
+];
+</script>

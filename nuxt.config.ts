@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxtjs/supabase",
     "@nuxtjs/color-mode",
+    "@nuxt/icon",
   ],
 
   colorMode: {
@@ -22,9 +23,9 @@ export default defineNuxtConfig({
   },
   supabase: {
     redirectOptions: {
-      login: "/login",
+      login: "/auth/login",
       callback: "/confirm",
-      exclude: ["/", "/auth/registration", "/auth/login"],
+      exclude: ["/", "/auth/registration", "/auth/login", "/settings"],
     },
   },
   shadcn: {
