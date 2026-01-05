@@ -14,14 +14,14 @@
             <TooltipTrigger as-child>
               <Button
                 :variant="route.path === link.path ? 'secondary' : 'ghost'"
-                class="w-14 h-14 rounded-xl transition-all duration-300 flex items-center justify-center"
+                class="rounded-xl transition-all duration-300 flex items-center justify-center !p-0 !w-13 !h-9"
                 :class="
                   route.path === link.path
-                    ? 'scale-110'
+                    ? 'scale-125'
                     : 'text-gray-400 hover:text-white'
                 "
               >
-                <Icon :name="link.icon" class="w-9 h-9" />
+                <Icon :name="link.icon" class="!w-6 !h-6" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -39,8 +39,9 @@ const route = useRoute();
 
 const navLinks = [
   { name: "Home", path: "/", icon: "i-heroicons-home" },
-  { name: "Search", path: "/studio", icon: "i-heroicons-magnifying-glass" },
-  { name: "Profile", path: "/Rank", icon: "i-heroicons-trophy" },
+  { name: "Studio", path: "/studio", icon: "i-heroicons-home-modern" },
+  { name: "Leaderboard", path: "/leaderboard", icon: "i-heroicons-trophy" },
+  { name: "Profile", path: "/profile", icon: "i-heroicons-user" },
   { name: "Settings", path: "/settings", icon: "i-heroicons-cog-6-tooth" },
 ];
 </script>
