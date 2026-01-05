@@ -40,7 +40,7 @@ const route = useRoute();
 const navLinks = [
   { name: "Home", path: "/", icon: "i-heroicons-home" },
   { name: "Studio", path: "/studio", icon: "i-heroicons-home-modern" },
-  { name: "Rank", path: "/Rank", icon: "i-heroicons-trophy" },
+  { name: "Leaderboard", path: "/leaderboard", icon: "i-heroicons-trophy" },
   { name: "Profile", path: "/profile", icon: "i-heroicons-user" },
   { name: "Settings", path: "/settings", icon: "i-heroicons-cog-6-tooth" },
 ];
