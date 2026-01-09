@@ -1,33 +1,35 @@
 <template>
-  <div>studio</div>
+  <div>
+    <Dialog>
+      <DialogTrigger>Open</DialogTrigger>
+      <DialogContent class="min-w-[55rem]">
+        <DialogHeader>
+          <DialogTitle>Tools</DialogTitle>
+        </DialogHeader>
+
+        <div class="grid grid-cols-2">
+          <Tuner
+            class="sm:w-[18rem] rounded-2xl border border-white/10 bg-gradient-to-br from-black/90 via-black/80 to-black/70 backdrop-blur-xl shadow-2xl px-4 py-4 text-white select-none"
+          />
+          <Meteronome
+            class="sm:w-[18rem] rounded-2xl border border-white/10 bg-gradient-to-br from-black/90 via-black/80 to-black/70 backdrop-blur-xl shadow-2xl px-4 py-4 text-white select-none"
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
+  </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-
-onMounted(() => {
-  const context = new AudioContext();
-
-  setupContext();
-
-  async function setupContext() {
-    const guitar = await getGuitar();
-    if (context.state === "suspended") {
-      await context.resume;
-    }
-    const source = context.createMediaStreamSource(guitar);
-    source.connect(context.destination);
-  }
-
-  function getGuitar() {
-    return navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: false,
-        autoGainControl: false,
-        noiseSuppression: false,
-        latency: 0,
-      },
-    });
-  }
-});
+import Tuner from "~/components/Tuner.vue";
+import Meteronome from "~/components/Metronome.vue";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 </script>
