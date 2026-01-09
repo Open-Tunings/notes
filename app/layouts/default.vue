@@ -1,23 +1,32 @@
-<script setup>
-const colorMode = useColorMode();
-
-const isDark = computed({
-  get: () => colorMode.value === "dark",
-  set: () => {
-    colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
-  },
-});
-</script>
-
 <template>
-  <ClientOnly>
-    <Button variant="outline" @click="isDark = !isDark">
-      <span v-if="colorMode.value === 'dark'">🌙</span>
-      <span v-else>☀️</span>
-      <span class="ml-2">Toggle Theme</span>
-    </Button>
-     <slot />
-  </ClientOnly>
-   
- 
+  <div @click.once="enableSound">
+    <!-- <audio ref="audio" src="/audio/audio1.mp3" autoplay muted loop /> -->
+
+    <Navbar />
+    <NuxtPage />
+  </div>
 </template>
+
+<script setup>
+import { onMounted, ref } from "vue";
+import Navbar from "~/components/Navbar.vue";
+
+const audio = ref(null);
+const unmuted = ref(false);
+
+const max_vol = 0.3;
+
+onMounted(() => {
+  if (audio.value) {
+    audio.value.volume = max_vol;
+    audio.value?.play();
+  }
+});
+
+const enableSound = () => {
+  if (!audio.value) return;
+  audio.value.muted = false;
+  audio.value.volume = max_vol;
+  unmuted.value = true;
+};
+</script>
