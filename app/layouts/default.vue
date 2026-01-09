@@ -1,6 +1,6 @@
 <template>
   <div @click.once="enableSound">
-    <audio ref="audio" src="/audio/audio1.mp3" autoplay muted loop />
+    <!-- <audio ref="audio" src="/audio/audio1.mp3" autoplay muted loop /> -->
 
     <Navbar />
     <NuxtPage />
