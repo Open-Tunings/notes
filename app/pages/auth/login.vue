@@ -22,7 +22,6 @@ const handleLogin = async (credentials) => {
 }
 </script>
 
-<script setup lang="ts"></script>
 
 <template>
   <div
