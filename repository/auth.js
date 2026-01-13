@@ -32,7 +32,7 @@ export const authRepository = (supabase) => ({
       provider: "google",
       options: {
         redirectTo: redirectToUrl,
-        scopes: "email profile", // Optional: Request specific scopes
+        scopes: "email profile", 
       },
     });
 

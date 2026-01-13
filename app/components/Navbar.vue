@@ -43,5 +43,6 @@ const navLinks = [
   { name: "Leaderboard", path: "/leaderboard", icon: "i-heroicons-trophy" },
   { name: "Profile", path: "/profile", icon: "i-heroicons-user" },
   { name: "Settings", path: "/settings", icon: "i-heroicons-cog-6-tooth" },
+  { name: "experiment", path: "/experiment", icon: "i-heroicons-bolt" },
 ];
 </script>

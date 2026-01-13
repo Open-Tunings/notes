@@ -35,8 +35,7 @@ const { signInWithGoogle } = authRepository(client);
 
 const handleGoogleLogin = async () => {
   const { error } = await signInWithGoogle();
-  // The user will be redirected to Google's consent screen automatically.
-  // After login, Supabase handles the redirection to /auth/callback.
+
 };
 </script>
 
