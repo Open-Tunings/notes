@@ -1,6 +1,6 @@
 <template>
   <div
-    class="z-10 bg-[url('images/bg22.jpg')] bg-cover bg-center bg-no-repeat h-screen"
+    class="z-10 bg-[url('/images/bg2.jpg')] bg-cover bg-center bg-no-repeat h-screen"
   >
     <div class="bg-neutral-900">
       <div class="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto text-center">
