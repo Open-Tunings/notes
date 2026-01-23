@@ -1,35 +1,58 @@
 <template>
-  <div>
-    <Dialog>
-      <DialogTrigger>Open</DialogTrigger>
-      <DialogContent class="min-w-[55rem]">
-        <DialogHeader>
-          <DialogTitle>Tools</DialogTitle>
-        </DialogHeader>
+  <div class="grid grid-cols-4 gap-0.5 h-screen">
+    
+    <div
+      class="group relative border overflow-hidden
+             bg-[url('images/studio1.jpg')] bg-cover bg-center text-white
+             filter grayscale brightness-75
+             transition-all duration-300 ease-out
+             hover:grayscale-0 hover:brightness-100 hover:scale-105"
+    >
+      <div
+        class="absolute bottom-10 left-1/2 -translate-x-1/2
+               text-center text-2xl
+               transition-transform duration-300
+               group-hover:scale-110"
+      >
+        Multiplayer
+      </div>
+    </div>
 
-        <div class="grid grid-cols-2">
-          <Tuner
-            class="sm:w-[18rem] rounded-2xl border border-white/10 bg-gradient-to-br from-black/90 via-black/80 to-black/70 backdrop-blur-xl shadow-2xl px-4 py-4 text-white select-none"
-          />
-          <Meteronome
-            class="sm:w-[18rem] rounded-2xl border border-white/10 bg-gradient-to-br from-black/90 via-black/80 to-black/70 backdrop-blur-xl shadow-2xl px-4 py-4 text-white select-none"
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div
+      class="group relative border overflow-hidden
+             bg-[url('images/studio22.png')] bg-cover bg-center text-white
+             filter grayscale brightness-75
+             transition-all duration-300 ease-out
+             hover:grayscale-0 hover:brightness-100 hover:scale-105"
+    >
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-2xl">
+        Career
+      </div>
+    </div>
+
+    <div
+      class="group relative border overflow-hidden
+             bg-[url('images/studio33.png')] bg-cover bg-center text-white
+             filter grayscale brightness-75
+             transition-all duration-300 ease-out
+             hover:grayscale-0 hover:brightness-100 hover:scale-105"
+    >
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-2xl">
+        Practise
+      </div>
+    </div>
+
+    <div
+      class="group relative border overflow-hidden
+             bg-[url('images/studio4.jpg')] bg-cover bg-center text-white
+             filter grayscale brightness-75
+             transition-all duration-300 ease-out
+             hover:grayscale-0 hover:brightness-100 hover:scale-105"
+    >
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-2xl">
+        Community
+      </div>
+    </div>
+
   </div>
 </template>
-
-<script setup>
-import Tuner from "~/components/Tuner.vue";
-import Meteronome from "~/components/Metronome.vue";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-</script>
