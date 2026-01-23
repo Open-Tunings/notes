@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-4 gap-0.5 h-screen">
+  <div class="grid grid-cols-4 gap-0.5 h-screen overflow-hidden">
     
     <div
       class="group relative border overflow-hidden

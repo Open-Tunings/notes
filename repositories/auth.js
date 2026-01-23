@@ -23,7 +23,7 @@ export const authRepository = (supabase) => ({
 
   async signInWithGoogle() {
     // Dynamically generate the redirect URL based on the current environment
-    const origin = process.client
+    const origin = import.meta.client
       ? window.location.origin
       : config.public.siteUrl;
     const redirectToUrl = `${origin}`;
