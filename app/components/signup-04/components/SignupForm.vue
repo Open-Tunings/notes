@@ -1,41 +1,36 @@
-<script setup lang="ts">
-import type { HTMLAttributes } from "vue";
-import { cn } from "@/lib/utils";
+<script setup>
+import { reactive } from "vue";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
-  FieldGroup,
   FieldLabel,
   FieldSeparator,
+  FieldDescription,
+  FieldGroup,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useSupabaseClient } from "#imports";
-import { authRepository } from "~~/repository/auth";
 
-const props = defineProps<{
-  class?: HTMLAttributes["class"];
-}>();
+const props = defineProps({
+  class: String,
+  loading: Boolean,
+  error: Object,
+});
+
+const emit = defineEmits(["submit", "google-signup"]);
 
 const credentials = reactive({
   email: "",
   password: "",
-  // confirmPassword: ""
 });
 
-const emit = defineEmits(["submit"]);
-
-const handlesubmit = () => {
+const handleSubmit = () => {
   emit("submit", { ...credentials });
 };
 
-const client = useSupabaseClient();
-const { signInWithGoogle } = authRepository(client);
-
-const handleGoogleLogin = async () => {
-  const { error } = await signInWithGoogle();
-
+const handleGoogle = () => {
+  emit("google-signup");
 };
 </script>
 
@@ -43,7 +38,7 @@ const handleGoogleLogin = async () => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card class="overflow-hidden p-0">
       <CardContent class="grid p-0 md:grid-cols-2">
-        <form @submit.prevent="handlesubmit" class="p-6 md:p-8">
+        <form @submit.prevent="handleSubmit" class="p-6 md:p-8">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
               <h1 class="text-2xl font-bold">Create your account</h1>
@@ -103,7 +98,7 @@ const handleGoogleLogin = async () => {
                 <span class="sr-only">Sign up with Apple</span>
               </Button>
               <Button
-                @click="handleGoogleLogin"
+                @click="handleGoogle"
                 variant="outline"
                 type="button"
               >
