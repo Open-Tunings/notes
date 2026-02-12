@@ -1,73 +1,70 @@
-// composables/useAuth.js
-import { ref, computed } from "vue";
-import { useSupabaseClient, useSupabaseUser } from "#imports"; 
+import { useSupabaseClient } from "#imports";
 import { authRepository } from "~~/repositories/auth";
+import { useAuthStore } from "~~/stores/auth";
 
 export const useAuth = () => {
   const supabase = useSupabaseClient();
-  const repo = authRepository(supabase); 
+  const repo = authRepository(supabase);
 
-  const user = useSupabaseUser();
-  const isLoading = ref(false);
-  const error = ref(null);
+  const authStore = useAuthStore();
 
-  // Login
   async function login(email, password) {
-    isLoading.value = true;
-    error.value = null;
+    authStore.isLoading = true;
+    authStore.clearError();
+
     try {
       const data = await repo.login({ email, password });
+      if (data.user) {
+        authStore.setUser(data.user);
+      }
       return data;
     } catch (e) {
-      error.value = e;
+      authStore.setError(e.message ?? e);
+      throw e;
     } finally {
-      isLoading.value = false;
+      authStore.isLoading = false;
     }
   }
 
-  // Register
   async function register(email, password) {
-    isLoading.value = true;
-    error.value = null;
+    authStore.isLoading = true;
+    authStore.clearError();
+
     try {
-      const data = await repo.register({ email, password });
-      return data;
+      return await repo.register({ email, password });
     } catch (e) {
-      error.value = e;
+      authStore.setError(e.message ?? e);
+      throw e;
     } finally {
-      isLoading.value = false;
+      authStore.isLoading = false;
     }
   }
 
-  // Google login
   async function loginWithGoogle() {
-    isLoading.value = true;
-    error.value = null;
+    authStore.isLoading = true;
+    authStore.clearError();
+
     try {
-      await repo.signInWithGoogle();
+      const { error } = await repo.signInWithGoogle();
+      if (error) throw error;
       return true;
     } catch (e) {
-      error.value = e;
+      authStore.setError(e.message ?? e);
       return false;
     } finally {
-      isLoading.value = false;
+      authStore.isLoading = false;
     }
   }
 
   async function logout() {
     await supabase.auth.signOut();
+    authStore.clearUser();
   }
-
-  const isLoggedIn = computed(() => !!user.value);
 
   return {
     login,
     register,
     loginWithGoogle,
     logout,
-    isLoggedIn,
-    isLoading,
-    error,
-    user,
   };
 };

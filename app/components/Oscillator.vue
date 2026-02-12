@@ -46,4 +46,5 @@ const internalValue = ref(props.modelValue);
 // keep internal value synced with parent
 watch(internalValue, (val) => emit("update:modelValue", val));
 watch(() => props.modelValue, (val) => (internalValue.value = val));
+
 </script>

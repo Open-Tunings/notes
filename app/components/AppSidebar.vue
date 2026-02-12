@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import type { SidebarProps } from '@/components/ui/sidebar'
-
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Ear,
-  Frame,
-  LifeBuoy,
-  Map,
-  Music,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-vue-next"
-
-import NavMain from '@/components/NavMain.vue'
-import NavProjects from '@/components/NavProjects.vue'
-import NavSecondary from '@/components/NavSecondary.vue'
-import NavUser from '@/components/NavUser.vue'
+import { ref, computed, onMounted } from "vue";
+import { useLessons } from "~~/composables/useLessons";
+import { useLevels } from "~~/composables/useLevels";
+import NavMain from "@/components/NavMain.vue";
+import NavProjects from "@/components/NavProjects.vue";
+import NavSecondary from "@/components/NavSecondary.vue";
+import NavUser from "@/components/NavUser.vue";
 import {
   Sidebar,
   SidebarContent,
@@ -28,191 +14,103 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
+import {
+  Frame,
+  PieChart,
+  Map,
+  LifeBuoy,
+  Send,
+  SquareTerminal,
+} from "lucide-vue-next";
+import { useAuthStore } from "~~/stores/auth";
+import { useCareerStore } from "~~/stores/career";
 
-const props = withDefaults(defineProps<SidebarProps>(), {
-  variant: "inset",
-})
+const auth = useAuthStore();
+const careerStore = useCareerStore();
+const userName = computed(
+  () => auth.user?.user_metadata?.name || auth.user?.email,
+);
 
-const data = {
-  user: {
-    name: "Donald Edwin",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Technique",
+// composables
+const { levels: dbLevels, fetchLevels } = useLevels();
+const { topics, lessonsByTopic, fetchTopics, fetchAllLessonsForLevel } =
+  useLessons();
+
+onMounted(async () => {
+  await fetchLevels();
+
+  // use stored level or default to first level
+  if (!careerStore.selectedLevelId) {
+    careerStore.setSelectedLevel(dbLevels.value?.[0]?.id || null);
+  }
+
+  if (careerStore.selectedLevelId) {
+    await fetchTopics(); // fetch all topics (shared)
+    await fetchAllLessonsForLevel(careerStore.selectedLevelId); // fetch lessons for the selected level
+  }
+
+
+});
+
+// handle level click (no URL change)
+const selectLevel = async (levelId: number) => {
+  if (careerStore.selectedLevelId === levelId) return;
+  careerStore.setSelectedLevel(levelId);
+  await fetchAllLessonsForLevel(levelId);
+};
+
+const selectTopic = async (topicId: number) => {
+  if (careerStore.selectedTopicId === topicId) return;
+  careerStore.setSelectedTopic(topicId);
+};
+
+const selectLesson = async (lessonId: number) => {
+  if (careerStore.selectedLessonId === lessonId) return;
+  careerStore.setSelectedLesson(lessonId);
+};
+
+// build sidebar navMain dynamically
+const navMain = computed(() => {
+  return topics.value.map((topic) => ({
+    id: topic.id,
+    title: topic.title,
+    icon: SquareTerminal,
+    isActive: careerStore.selectedTopicId === topic.id,
+    items: (lessonsByTopic.value[topic.id] || []).map((lesson) => ({
+      id: lesson.id,
+      title: lesson.title,
       url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Basic fingerpicking",
-          url: "#",
-        },
-        {
-          title: "Strumming patterns",
-          url: "#",
-        },
-        {
-          title: "Open Chords",
-          url: "#",
-        },
-        {
-          title: "Power Chords",
-          url: "#",
-        },
-        {
-          title: "Switching Chords",
-          url: "#",
-        },
-        {
-          title: "Basic Picking",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Fretboard Knowledge",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Open String names",
-          url: "#",
-        },
-        {
-          title: "Natural notes",
-          url: "#",
-        },
-        {
-          title: "Note Memorization",
-          url: "#",
-        },
-        {
-          title: "Understanding steps",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Music Theory",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Major Scale",
-          url: "#",
-        },
-        {
-          title: "Chord Construction",
-          url: "#",
-        },
-        {
-          title: "Keys",
-          url: "#",
-        },
-        {
-          title: "Chord Progressions",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Ear Training",
-      url: "#",
-      icon: Ear,
-      items: [
-        {
-          title: "Basic Intervals",
-          url: "#",
-        },
-        {
-          title: "Major vs Minor",
-          url: "#",
-        },
-        {
-          title: "Transcription",
-          url: "#",
-        },
-        
-      ],
-    },
-     {
-      title: "Musical Expressions",
-      url: "#",
-      icon: Music,
-      items: [
-        {
-          title: "Dynamics",
-          url: "#",
-        },
-        {
-          title: "slide, hammer-ons, pull-offs",
-          url: "#",
-        },
-        {
-          title: "vibrato & bends",
-          url: "#",
-        },
-        
-      ],
-    },
-     {
-      title: "Creativity",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Simple riffs",
-          url: "#",
-        },
-        {
-          title: "Backing tracks",
-          url: "#",
-        },
-        {
-          title: "Improvisation",
-          url: "#",
-        },
-      ],
-    },
-  ],
+      isActive: careerStore.selectedLessonId === lesson.id,
+    })),
+  }));
+});
+
+// build levels nav for sidebar
+const levelsNav = computed(() => {
+  return dbLevels.value.map((level) => ({
+    id: level.id,
+    name: level.title,
+    icon:
+      level.title === "Beginner"
+        ? Frame
+        : level.title === "Intermediate"
+          ? PieChart
+          : Map,
+    isActive: careerStore.selectedLevelId === level.id,
+  }));
+});
+
+// final data for sidebar components
+const data = computed(() => ({
+  user: { name: userName.value, avatar: "/avatars/shadcn.jpg" },
+  navMain: navMain.value,
   navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
+    { title: "Support", url: "#", icon: LifeBuoy },
+    { title: "Feedback", url: "#", icon: Send },
   ],
-  projects: [
-    {
-      name: "Beginner",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Intermediate",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Master",
-      url: "#",
-      icon: Map,
-    },
-    {
-      name: "John Mayer",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
+  levels: levelsNav.value,
+}));
 </script>
 
 <template>
@@ -231,15 +129,19 @@ const data = {
               </div>
             </a> -->
             <SidebarFooter>
-      <NavUser :user="data.user" />
-    </SidebarFooter>
+              <NavUser :user="data.user" />
+            </SidebarFooter>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain" />
-      <NavProjects :projects="data.projects" />
+      <NavMain
+        @select-topic="selectTopic"
+        @select-lesson="selectLesson"
+        :items="data.navMain"
+      />
+      <NavProjects @select-level="selectLevel" :projects="data.levels" />
       <NavSecondary :items="data.navSecondary" class="mt-auto" />
     </SidebarContent>
   </Sidebar>

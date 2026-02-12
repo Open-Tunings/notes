@@ -1,12 +1,14 @@
 <script setup>
 import SignupForm from "@/components/signup-04/components/SignupForm.vue";
 import { useAuth } from "~~/composables/useAuth";
+import { useAuthStore } from "~~/stores/auth";
 
 definePageMeta({
   layout: "auth",
 });
 
-const { register, loginWithGoogle, isLoading, error } = useAuth();
+const { register, loginWithGoogle } = useAuth();
+const auth = useAuthStore();
 
 const handleRegister = async (credentials) => {
   const data = await register(credentials);
@@ -29,8 +31,8 @@ const handleGoogleSignup = async () => {
       <SignupForm
         @submit="handleRegister"
         @google-signup="handleGoogleSignup"
-        :loading="isLoading"
-        :error="error"
+        :loading="auth.isLoading"
+        :error="auth.error"
       />
     </div>
   </div>

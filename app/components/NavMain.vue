@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
-import { ChevronRight } from "lucide-vue-next"
+import type { LucideIcon } from "lucide-vue-next";
+import { ChevronRight } from "lucide-vue-next";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,29 +16,44 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
+
+const emit = defineEmits<{
+  (e: "select-topic", topicId: number): void;
+  (e: "select-lesson", lessonId: number): void;
+}>();
 
 defineProps<{
   items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
+    id: number;
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}>()
+      title: string;
+      url: string;
+    }[];
+  }[];
+}>();
 </script>
 
 <template>
   <SidebarGroup>
     <SidebarGroupLabel class="font-bold text-sm">Beginner</SidebarGroupLabel>
     <SidebarMenu>
-      <Collapsible v-for="item in items" :key="item.title" as-child :default-open="item.isActive">
+      <Collapsible
+        v-for="item in items"
+        :key="item.title"
+        as-child
+        :default-open="item.isActive"
+      >
         <SidebarMenuItem>
-          <SidebarMenuButton as-child :tooltip="item.title">
+          <SidebarMenuButton
+            as-child
+            :tooltip="item.title"
+            @click="emit('select-topic', item.id)"
+          >
             <a :href="item.url">
               <component :is="item.icon" />
               <span>{{ item.title }}</span>
@@ -53,8 +68,15 @@ defineProps<{
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
-                <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
-                  <SidebarMenuSubButton as-child>
+                <SidebarMenuSubItem
+                  v-for="subItem in item.items"
+                  :key="subItem.title"
+                >
+                  <SidebarMenuSubButton
+                    as-child
+                    @click="emit('select-lesson', subItem.id)"
+                    :class="{ 'bg-muted': subItem.isActive }"
+                  >
                     <a :href="subItem.url">
                       <span>{{ subItem.title }}</span>
                     </a>

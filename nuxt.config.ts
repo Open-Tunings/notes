@@ -16,7 +16,13 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "@nuxtjs/color-mode",
     "@nuxt/icon",
+    "@pinia/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
   ],
+
+  pinia: {
+    storesDirs: ["./stores/**"],
+  },
 
   colorMode: {
     classSuffix: "",

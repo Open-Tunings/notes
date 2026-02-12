@@ -1,25 +1,25 @@
 <script setup>
 import LoginForm from "@/components/login-04/components/LoginForm.vue";
 import { useAuth } from "~~/composables/useAuth";
+import { useAuthStore } from "~~/stores/auth";
 
 definePageMeta({
   layout: "auth",
 });
 
-
-const { login, loginWithGoogle, isLoading, error, isLoggedIn } = useAuth();
+const { login, loginWithGoogle } = useAuth();
+const auth = useAuthStore();
 
 const handleLogin = async (credentials) => {
   try {
     const data = await login(credentials.email, credentials.password);
     if (data) {
-      navigateTo("/"); 
+      navigateTo("/");
     }
   } catch (e) {
     alert(e.message || "Login failed");
   }
 };
-
 
 const handleGoogleLogin = async () => {
   try {
@@ -36,13 +36,15 @@ const handleGoogleLogin = async () => {
 </script>
 
 <template>
-  <div class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+  <div
+    class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10"
+  >
     <div class="w-full max-w-sm md:max-w-4xl">
-      <LoginForm 
-        @submit="handleLogin" 
-        @google-login="handleGoogleLogin" 
-        :loading="isLoading" 
-        :error="error"
+      <LoginForm
+        @submit="handleLogin"
+        @google-login="handleGoogleLogin"
+        :loading="auth.isLoading"
+        :error="auth.error"
       />
     </div>
   </div>

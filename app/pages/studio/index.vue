@@ -1,6 +1,7 @@
 <template>
   <div class="grid grid-cols-4 gap-0.5 h-screen overflow-hidden">
-    <div
+    <NuxtLink
+      to="/game/multiplayer"
       class="group relative border overflow-hidden bg-[url('images/studio1.jpg')] bg-cover bg-center text-white filter grayscale brightness-75 transition-all duration-300 ease-out hover:grayscale-0 hover:brightness-100 hover:scale-105"
     >
       <div
@@ -8,7 +9,7 @@
       >
         Multiplayer
       </div>
-    </div>
+    </NuxtLink>
 
     <NuxtLink
       to="/game/career"
@@ -20,6 +21,8 @@
         Career
       </div>
     </NuxtLink>
+
+  
 
     <div
       class="group relative border overflow-hidden bg-[url('images/studio33.png')] bg-cover bg-center text-white filter grayscale brightness-75 transition-all duration-300 ease-out hover:grayscale-0 hover:brightness-100 hover:scale-105"
@@ -42,3 +45,4 @@
     </div>
   </div>
 </template>
+

@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-vue-next"
+import type { LucideIcon } from "lucide-vue-next";
+import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-vue-next";
 
 import {
   DropdownMenu,
@@ -13,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,17 +17,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from "@/components/ui/sidebar";
+
+const emit = defineEmits<{
+  (e: "select-level", levelId: number): void;
+}>();
 
 defineProps<{
   projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-}>()
+    id: number;
+    name: string;
+    icon: LucideIcon;
+    isActive: boolean;
+  }[];
+}>();
 
-const { isMobile } = useSidebar()
+const { isMobile } = useSidebar();
 </script>
 
 <template>
@@ -40,11 +40,12 @@ const { isMobile } = useSidebar()
     <SidebarGroupLabel class="sm">Levels</SidebarGroupLabel>
     <SidebarMenu>
       <SidebarMenuItem v-for="item in projects" :key="item.name">
-        <SidebarMenuButton as-child>
-          <a :href="item.url">
-            <component :is="item.icon" />
-            <span>{{ item.name }}</span>
-          </a>
+        <SidebarMenuButton
+          @click="emit('select-level', item.id)"
+          :class="{ 'bg-muted': item.isActive }"
+        >
+          <component :is="item.icon" />
+          <span>{{ item.name }}</span>
         </SidebarMenuButton>
         <!-- <DropdownMenu>
           <DropdownMenuTrigger as-child>
@@ -75,9 +76,7 @@ const { isMobile } = useSidebar()
         </DropdownMenu> -->
       </SidebarMenuItem>
       <SidebarMenuItem>
-        <SidebarMenuButton>
-         
-        </SidebarMenuButton>
+        <SidebarMenuButton> </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
   </SidebarGroup>
