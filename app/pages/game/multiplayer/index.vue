@@ -59,10 +59,10 @@ onMounted(() => {
     },
   });
 
-  loadSprite('idle-sprite', '/game/Idle.png', {
-    sliceX: 8,
+  loadSprite('idle-sprite', '/game/Idle_2.png', {
+    sliceX: 6,
     sliceY: 1,
-    anims: {'idle-anim': { from: 0, to: 7, loop: true }},
+    anims: {'idle-anim': { from: 0, to: 5, loop: true }},
   });
   loadSprite('run-sprite', '/game/Run.png', {
     sliceX: 8,
@@ -70,14 +70,19 @@ onMounted(() => {
     anims: {'run-anim': { from: 0, to: 7, loop: true }},
   });
   loadSprite('jump-sprite', '/game/Jump.png', {
-    sliceX: 2,
+    sliceX: 10,
     sliceY: 1,
-    anims: {'jump-anim': { from: 0, to: 1, loop: true }},
+    anims: {'jump-anim': { from: 0, to: 9, loop: true }},
   });
-  loadSprite('fall-sprite', '/game/Fall.png', {
-    sliceX: 8,
+  loadSprite('fall-sprite', '/game/Jump.png', {
+    sliceX: 10,
     sliceY: 1,
-    anims: {'fall-anim': { from: 0, to: 7, loop: true }},
+    anims: {'fall-anim': { from: 5, to: 9, loop: true }},
+  });
+  loadSprite('attack-sprite', '/game/Attack_1.png', {
+    sliceX: 10,
+    sliceY: 1,
+    anims: {'attack-anim': { from: 4, to: 9, loop: true }},
   });
   
   setGravity(1000);
@@ -133,22 +138,118 @@ onMounted(() => {
 
   const player = add([
     sprite('idle-sprite'),
-    scale(2),
-    area({shape: new Rect(vec2(0), 32, 32), offset: vec2(0, 32)}),
+    scale(1),
+    area({shape: new Rect(vec2(0), 32, 60), offset: vec2(0, 32)}),
     anchor("center"),
     body(),
     pos(900, 10),
     {
-        speed: 500,
+        speed: 300,
         previousHeight: null,
         heightDelta: 0,
-        direction: 'right'
+        direction: 'right',
+        isAttacking: false
     }
 ])
 
 player.play('idle-anim')
-});
 
+onKeyDown('right', () => {
+    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
+        player.use(sprite('run-sprite'))
+        player.play('run-anim')
+    }
+
+    if (player.direction !== 'right') player.direction = 'right'
+    player.move(player.speed, 0)
+})
+
+onKeyRelease('right', () =>{
+    player.use(sprite('idle-sprite'))
+    player.play('idle-anim')
+})
+
+onKeyDown('left', () => {
+    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
+        player.use(sprite('run-sprite'))
+        player.play('run-anim')
+    }
+
+    if (player.direction !== 'left') player.direction = 'left'
+    player.move(-player.speed, 0)
+})
+
+onKeyRelease('left', () =>{
+    player.use(sprite('idle-sprite'))
+    player.play('idle-anim')
+})
+
+onKeyPress('q', () => {
+  if (player.isAttacking || !player.isGrounded()) return
+
+  player.isAttacking = true
+  const AttackDir = player.direction 
+
+
+  player.use(sprite('attack-sprite'))
+  player.flipX = AttackDir === 'left'
+  player.play('attack-anim')
+
+  wait(0.7, () => {
+    player.isAttacking = false
+  })
+})
+
+
+onKeyPress('up', () => {
+    if (player.isGrounded()) {
+        player.jump()
+    }
+})
+
+camScale(1.3)
+
+
+onUpdate(() => {
+    if(player.isAttacking) return
+
+    if(player.previousHeight) {
+        player.heightDelta = player.previousHeight - player.pos.y
+    }
+
+    player.previousHeight = player.pos.y
+
+    const cameraLeftBound = 550
+    const cameraRigthBound = 3000
+    const cameraVerticalOffset = player.pos.y - 100
+
+    if (cameraLeftBound > player.pos.x) {
+        camPos(cameraLeftBound, cameraVerticalOffset)
+    } else if (cameraRigthBound < player.pos.x) {
+        camPos(cameraRigthBound, cameraVerticalOffset)
+    } else {
+        camPos(player.pos.x, cameraVerticalOffset)
+    }
+
+    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
+        player.use(sprite('idle-sprite'))
+        player.play('idle-anim')
+    }
+    if (player.curAnim() !== 'jump-anim' && !player.isGrounded() && player.heightDelta > 0) {
+        player.use(sprite('jump-sprite'))
+        player.play('jump-anim')
+    }
+    if (player.curAnim() !== 'fall-anim' && !player.isGrounded() && player.heightDelta < 0) {
+        player.use(sprite('fall-sprite'))
+        player.play('fall-anim')
+    }
+    if (player.direction === "left") {
+        player.flipX = true
+    } else {
+        player.flipX = false
+    }
+})
+});
 
 
 </script>
