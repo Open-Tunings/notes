@@ -59,7 +59,7 @@ onMounted(() => {
     },
   });
 
-  loadSprite('idle-sprite', '/game/Idle_2.png', {
+  loadSprite('idle-sprite', '/game/Idle.png', {
     sliceX: 6,
     sliceY: 1,
     anims: {'idle-anim': { from: 0, to: 5, loop: true }},
@@ -70,19 +70,19 @@ onMounted(() => {
     anims: {'run-anim': { from: 0, to: 7, loop: true }},
   });
   loadSprite('jump-sprite', '/game/Jump.png', {
-    sliceX: 10,
+    sliceX: 15,
     sliceY: 1,
-    anims: {'jump-anim': { from: 0, to: 9, loop: true }},
+    anims: {'jump-anim': { from: 0, to: 14, loop: true }},
   });
   loadSprite('fall-sprite', '/game/Jump.png', {
-    sliceX: 10,
+    sliceX: 15,
     sliceY: 1,
-    anims: {'fall-anim': { from: 5, to: 9, loop: true }},
+    anims: {'fall-anim': { from: 4, to: 14, loop: true }},
   });
-  loadSprite('attack-sprite', '/game/Attack_1.png', {
-    sliceX: 10,
+  loadSprite('attack-sprite', '/game/Attack_2.png', {
+    sliceX: 6,
     sliceY: 1,
-    anims: {'attack-anim': { from: 4, to: 9, loop: true }},
+    anims: {'attack-anim': { from: 0, to: 5, loop: true }},
   });
   
   setGravity(1000);
@@ -142,7 +142,7 @@ onMounted(() => {
     area({shape: new Rect(vec2(0), 32, 60), offset: vec2(0, 32)}),
     anchor("center"),
     body(),
-    pos(900, 10),
+    pos(100, 10),
     {
         speed: 300,
         previousHeight: null,
@@ -195,7 +195,7 @@ onKeyPress('q', () => {
   player.flipX = AttackDir === 'left'
   player.play('attack-anim')
 
-  wait(0.7, () => {
+  wait(0.8, () => {
     player.isAttacking = false
   })
 })
