@@ -1,25 +1,30 @@
 <template>
-  <div></div>
+  <div id="game-container" class="w-full h-full"></div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
 import kaplay from "kaplay";
 
 definePageMeta({
   layout: "studio",
 });
 
+let k = null;
+
 onMounted(() => {
-  kaplay({
+  const container = document.getElementById("game-container");
+
+  k = kaplay({
     width: 1280,
     height: 720,
+    parent: container,
   });
 
   loadSprite("background-0", "/game/background_0.png");
   loadSprite("background-1", "/game/background_1.png");
   loadSprite("background-2", "/game/background_2.png");
-   loadSpriteAtlas("/game/tileset.png", {
+  loadSpriteAtlas("/game/tileset.png", {
     "platform-left": { x: 82, y: 64, width: 16, height: 8 },
     "platform-middle": {
       x: 112,
@@ -59,32 +64,32 @@ onMounted(() => {
     },
   });
 
-  loadSprite('idle-sprite', '/game/Idle.png', {
+  loadSprite("idle-sprite", "/game/Idle.png", {
     sliceX: 6,
     sliceY: 1,
-    anims: {'idle-anim': { from: 0, to: 5, loop: true }},
+    anims: { "idle-anim": { from: 0, to: 5, loop: true } },
   });
-  loadSprite('run-sprite', '/game/Run.png', {
+  loadSprite("run-sprite", "/game/Run.png", {
     sliceX: 8,
     sliceY: 1,
-    anims: {'run-anim': { from: 0, to: 7, loop: true }},
+    anims: { "run-anim": { from: 0, to: 7, loop: true } },
   });
-  loadSprite('jump-sprite', '/game/Jump.png', {
+  loadSprite("jump-sprite", "/game/Jump.png", {
     sliceX: 15,
     sliceY: 1,
-    anims: {'jump-anim': { from: 0, to: 14, loop: true }},
+    anims: { "jump-anim": { from: 0, to: 14, loop: true } },
   });
-  loadSprite('fall-sprite', '/game/Jump.png', {
+  loadSprite("fall-sprite", "/game/Jump.png", {
     sliceX: 15,
     sliceY: 1,
-    anims: {'fall-anim': { from: 4, to: 14, loop: true }},
+    anims: { "fall-anim": { from: 4, to: 14, loop: true } },
   });
-  loadSprite('attack-sprite', '/game/Attack_2.png', {
+  loadSprite("attack-sprite", "/game/Attack_2.png", {
     sliceX: 6,
     sliceY: 1,
-    anims: {'attack-anim': { from: 0, to: 5, loop: true }},
+    anims: { "attack-anim": { from: 0, to: 5, loop: true } },
   });
-  
+
   setGravity(1000);
 
   add([sprite("background-0"), fixed(), scale(4)]);
@@ -103,7 +108,6 @@ onMounted(() => {
 
   const tree = add([sprite("smaller-tree"), pos(70, 190), scale(4)]);
 
- 
   const map = addLevel(
     [
       "5                                                     5",
@@ -135,121 +139,130 @@ onMounted(() => {
 
   map.use(scale(4));
 
-
   const player = add([
-    sprite('idle-sprite'),
+    sprite("idle-sprite"),
     scale(1),
-    area({shape: new Rect(vec2(0), 32, 60), offset: vec2(0, 32)}),
+    area({ shape: new Rect(vec2(0), 32, 60), offset: vec2(0, 32) }),
     anchor("center"),
     body(),
     pos(100, 10),
     {
-        speed: 300,
-        previousHeight: null,
-        heightDelta: 0,
-        direction: 'right',
-        isAttacking: false
-    }
-])
+      speed: 300,
+      previousHeight: null,
+      heightDelta: 0,
+      direction: "right",
+      isAttacking: false,
+    },
+  ]);
 
-player.play('idle-anim')
+  player.play("idle-anim");
 
-onKeyDown('right', () => {
-    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
-        player.use(sprite('run-sprite'))
-        player.play('run-anim')
-    }
-
-    if (player.direction !== 'right') player.direction = 'right'
-    player.move(player.speed, 0)
-})
-
-onKeyRelease('right', () =>{
-    player.use(sprite('idle-sprite'))
-    player.play('idle-anim')
-})
-
-onKeyDown('left', () => {
-    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
-        player.use(sprite('run-sprite'))
-        player.play('run-anim')
+  onKeyDown("right", () => {
+    if (player.curAnim() !== "run-anim" && player.isGrounded()) {
+      player.use(sprite("run-sprite"));
+      player.play("run-anim");
     }
 
-    if (player.direction !== 'left') player.direction = 'left'
-    player.move(-player.speed, 0)
-})
+    if (player.direction !== "right") player.direction = "right";
+    player.move(player.speed, 0);
+  });
 
-onKeyRelease('left', () =>{
-    player.use(sprite('idle-sprite'))
-    player.play('idle-anim')
-})
+  onKeyRelease("right", () => {
+    player.use(sprite("idle-sprite"));
+    player.play("idle-anim");
+  });
 
-onKeyPress('q', () => {
-  if (player.isAttacking || !player.isGrounded()) return
+  onKeyDown("left", () => {
+    if (player.curAnim() !== "run-anim" && player.isGrounded()) {
+      player.use(sprite("run-sprite"));
+      player.play("run-anim");
+    }
 
-  player.isAttacking = true
-  const AttackDir = player.direction 
+    if (player.direction !== "left") player.direction = "left";
+    player.move(-player.speed, 0);
+  });
 
+  onKeyRelease("left", () => {
+    player.use(sprite("idle-sprite"));
+    player.play("idle-anim");
+  });
 
-  player.use(sprite('attack-sprite'))
-  player.flipX = AttackDir === 'left'
-  player.play('attack-anim')
+  onKeyPress("q", () => {
+    if (player.isAttacking || !player.isGrounded()) return;
 
-  wait(0.8, () => {
-    player.isAttacking = false
-  })
-})
+    player.isAttacking = true;
+    const AttackDir = player.direction;
 
+    player.use(sprite("attack-sprite"));
+    player.flipX = AttackDir === "left";
+    player.play("attack-anim");
 
-onKeyPress('up', () => {
+    wait(0.8, () => {
+      player.isAttacking = false;
+    });
+  });
+
+  onKeyPress("up", () => {
     if (player.isGrounded()) {
-        player.jump()
+      player.jump();
     }
-})
+  });
 
-camScale(1.3)
+  camScale(1.3);
 
+  onUpdate(() => {
+    if (player.isAttacking) return;
 
-onUpdate(() => {
-    if(player.isAttacking) return
-
-    if(player.previousHeight) {
-        player.heightDelta = player.previousHeight - player.pos.y
+    if (player.previousHeight) {
+      player.heightDelta = player.previousHeight - player.pos.y;
     }
 
-    player.previousHeight = player.pos.y
+    player.previousHeight = player.pos.y;
 
-    const cameraLeftBound = 550
-    const cameraRigthBound = 3000
-    const cameraVerticalOffset = player.pos.y - 100
+    const cameraLeftBound = 550;
+    const cameraRigthBound = 3000;
+    const cameraVerticalOffset = player.pos.y - 100;
 
     if (cameraLeftBound > player.pos.x) {
-        camPos(cameraLeftBound, cameraVerticalOffset)
+      camPos(cameraLeftBound, cameraVerticalOffset);
     } else if (cameraRigthBound < player.pos.x) {
-        camPos(cameraRigthBound, cameraVerticalOffset)
+      camPos(cameraRigthBound, cameraVerticalOffset);
     } else {
-        camPos(player.pos.x, cameraVerticalOffset)
+      camPos(player.pos.x, cameraVerticalOffset);
     }
 
-    if (player.curAnim() !== 'run-anim' && player.isGrounded()) {
-        player.use(sprite('idle-sprite'))
-        player.play('idle-anim')
+    if (player.curAnim() !== "run-anim" && player.isGrounded()) {
+      player.use(sprite("idle-sprite"));
+      player.play("idle-anim");
     }
-    if (player.curAnim() !== 'jump-anim' && !player.isGrounded() && player.heightDelta > 0) {
-        player.use(sprite('jump-sprite'))
-        player.play('jump-anim')
+    if (
+      player.curAnim() !== "jump-anim" &&
+      !player.isGrounded() &&
+      player.heightDelta > 0
+    ) {
+      player.use(sprite("jump-sprite"));
+      player.play("jump-anim");
     }
-    if (player.curAnim() !== 'fall-anim' && !player.isGrounded() && player.heightDelta < 0) {
-        player.use(sprite('fall-sprite'))
-        player.play('fall-anim')
+    if (
+      player.curAnim() !== "fall-anim" &&
+      !player.isGrounded() &&
+      player.heightDelta < 0
+    ) {
+      player.use(sprite("fall-sprite"));
+      player.play("fall-anim");
     }
     if (player.direction === "left") {
-        player.flipX = true
+      player.flipX = true;
     } else {
-        player.flipX = false
+      player.flipX = false;
     }
-})
+  });
 });
 
-
+onBeforeUnmount(() => {
+  if (k) {
+    k.canvas.remove?.();
+    k = null;
+  }
+});
 </script>
