@@ -1,13 +1,13 @@
 <template>
   <div class="grid grid-cols-4 gap-0.5 h-screen overflow-hidden">
     <NuxtLink
-      to="/game/multiplayer"
+      to="/game/experimental"
       class="group relative border overflow-hidden bg-[url('/images/studio1.jpg')] bg-cover bg-center text-white filter grayscale brightness-75 transition-all duration-300 ease-out hover:grayscale-0 hover:brightness-100 hover:scale-105"
     >
       <div
         class="font-carbon absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-2xl transition-transform duration-300 group-hover:scale-110"
       >
-        Multiplayer
+        Experimental
       </div>
     </NuxtLink>
 
